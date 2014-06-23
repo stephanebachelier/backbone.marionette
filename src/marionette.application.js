@@ -5,8 +5,9 @@
 // Stores and starts up `Region` objects, includes an
 // event aggregator as `app.vent`
 Marionette.Application = function(options) {
+  this._isInitialized = false;
   this._initRegionManager();
-  this._initCallbacks = new Marionette.Callbacks();
+  this._setupInitializersAndFinalizers();
   var globalCh = Backbone.Wreqr.radio.channel('global');
   this.vent = globalCh.vent;
   this.commands = globalCh.commands;
@@ -31,7 +32,7 @@ _.extend(Marionette.Application.prototype, Backbone.Events, {
   // method is called, or run immediately if added after `start`
   // has already been called.
   addInitializer: function(initializer) {
-    this._initCallbacks.add(initializer);
+    this._initializerCallbacks.add(initializer);
   },
 
   // kick off all of the application's processes.
@@ -39,8 +40,9 @@ _.extend(Marionette.Application.prototype, Backbone.Events, {
   // to the app, and runs all of the initializer functions
   start: function(options) {
     this.triggerMethod('before:start', options);
-    this._initCallbacks.run(options, this);
+    this._initializerCallbacks.run(options, this);
     this.triggerMethod('start', options);
+    this._isInitialized = true;
   },
 
   // Add regions to your app.
@@ -73,6 +75,36 @@ _.extend(Marionette.Application.prototype, Backbone.Events, {
   // Get all the regions from the region manager
   getRegions: function(){
     return this._regionManager.getRegions();
+  },
+
+  stop: function () {
+    if (!this._isInitialized) { return; }
+    this._isInitialized = false;
+
+    this.triggerMethod('before:stop');
+    // run the finalizers
+    this._finalizerCallbacks.run(undefined, this);
+
+    // reset the initializers and finalizers
+    this._initializerCallbacks.reset();
+    this._finalizerCallbacks.reset();
+
+    this.triggerMethod('stop');
+  },
+
+  // Add a finalizer that is either run at when the `close`
+  // method is called, or run immediately if added after `close`
+  // has already been called.
+  addFinalizer: function(finalizer) {
+    this._finalizerCallbacks.add(finalizer);
+  },
+
+  // Internal method: set up new copies of initializers and finalizers.
+  // Calling this method will wipe out all existing initializers and
+  // finalizers.
+  _setupInitializersAndFinalizers: function() {
+    this._initializerCallbacks = new Marionette.Callbacks();
+    this._finalizerCallbacks = new Marionette.Callbacks();
   },
 
   // Create a module, attached to the application
