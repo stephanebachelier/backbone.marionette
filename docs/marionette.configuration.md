@@ -87,6 +87,18 @@ require.config({
 
 If you require the dependency `marionette`, it will fail as the file `scripts/marionette.js` does not exist.
 
+You will ask for `Marionette` dependency like this:
+
+```js
+define(['backbone.marionette', 'foo'], function (Marionette, Foo) {
+```
+
+If you want to use 'marionette' as the name you will have to rename the file to `marionette.js`, and you will you then, 
+
+```js
+define(['marionette', 'foo'], function (Marionette, Foo) {
+```
+
 As a final note to this example, this is not a good practice as you will have to manually add all your dependencies and update them manually which may be a nightmare.
 
 #### Using a package manager, Bower for example
@@ -108,10 +120,36 @@ require.config({
     marionette: 'path/to/backbone.marionette/lib/core/backbone.marionette'
     // OR
     // bundle
-    
+    marionette: 'path/to/backbone.marionette/lib/backbone.marionette'
   },
   // ...
 });
+```
+
+With the above configuration you just need use the path key to require `Marionette` as a dependency, which means:
+
+```js
+define(['marionette', 'foo'], function (Marionette, Foo) {
+```
+
+Or if you want to use `backbone.marionette`, as the module name:
+
+```js
+require.config({
+  // ...
+  paths: {
+    // single file example
+    // beware of the quotes (single here but you can use the double if you want
+    'backbone.marionette: 'path/to/backbone.marionette/lib/core/backbone.marionette'
+  },
+  // ...
+});
+```
+
+With the updated configuration you will need to use the name `backbone.marionette` to load `Marionette` dependency, see below:
+
+```js
+define(['backbone.marionette', 'foo'], function (Marionette, Foo) {
 ```
 
 
