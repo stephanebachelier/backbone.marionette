@@ -455,6 +455,18 @@ MyApp.mainRegion.on("swap", function(view, region, options){
   // you also have access to the `options` that were passed to the Region.show call
 });
 
+MyApp.mainRegion.on("before:swapOut", function(view, region, options){
+  // manipulate the `view` or do something extra
+  // with the `region`
+  // you also have access to the `options` that were passed to the Region.show call
+});
+
+MyApp.mainRegion.on("swapOut", function(view, region, options){
+  // manipulate the `view` or do something extra
+  // with the `region`
+  // you also have access to the `options` that were passed to the Region.show call
+});
+
 MyApp.mainRegion.on("empty", function(view, region, options){
   // manipulate the `view` or do something extra
   // with the `region`
@@ -491,6 +503,14 @@ var MyRegion = Backbone.Marionette.Region.extend({
 
   onSwap: function(view, region, options){
     // the `view` has been swapped
+  },
+
+  onBeforeSwapOut: function(view, region, options) {
+    // the `view` has not been swapped out yet
+  },
+
+  onSwapOut: function(view, region, options){
+    // the `view` has been swapped out
   }
 });
 ```
