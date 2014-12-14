@@ -84,6 +84,7 @@ Marionette.LayoutView = Marionette.ItemView.extend({
   _buildRegions: function(regions) {
     var defaults = {
       regionClass: this.getOption('regionClass'),
+      // This catches #2063 no?
       parentEl: _.partial(_.result, this, '$el')
     };
 
