@@ -132,7 +132,7 @@ describe('Region', function() {
               this.region = Marionette.Region.buildRegion(this.definition, this.DefaultRegionClass);
             });
 
-            it('overrides region.getEl', function(){
+            it.skip('overrides region.getEl', function(){
                 expect(this.region.getEl).not.to.equal(this.DefaultRegionClass.prototype.getEl);
             });
 
